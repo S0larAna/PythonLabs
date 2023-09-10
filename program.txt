@@ -1,0 +1,56 @@
+def double(num):
+    return num*2
+
+def applyToOne(f):
+    return f(1)
+
+#functions can be passed as arguments
+my_double = double
+print(applyToOne(my_double))
+
+#lambda functions
+y = applyToOne(lambda x: x+4)
+print(y)
+
+#example of passing default values
+def printName(first = "Your first name", last = "Your last name"):
+    return(first+" "+last)
+print(printName())
+
+#exceptions
+try:
+    print(3/0)
+except ZeroDivisionError:
+    print("zero division error")
+
+#lists
+x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+#slicing [i:j] i inclusive j not inclusive
+print(x[:3])
+print(x[2:6])
+print(x[4:])
+#can take third "stride" argument:
+print(x[::3]) 
+print(x[5:2:-1])
+
+print(1 in [1, 2, 3]) 
+print(0 in [1, 2, 3]) 
+
+x = [1, 2, 3]
+x.extend([4, 5, 6]) 
+#can also concatenate using + sign
+
+x.append(0) 
+y = x[-1] 
+z = len(x) 
+
+#unpacking
+x, y = [1, 2] 
+_, y = [1, 2] 
+
+#dicts
+empty_dict = {} 
+empty_dict2 = dict() 
+grades = {"Joel": 80, "Tim": 95} 
+
+#defaultdict
