@@ -121,6 +121,8 @@ class Shape():
 
 # trapezoid
 class C1(Shape):
+    type = "trapezoid"
+
     def __init__(self, x_y_upper_right, x_y_lower_right, x_y_lower_left, x_y_upper_left, color=""):
         self.x_y_upper_right, self.x_y_upper_left = (x_y_upper_right, x_y_upper_left)
         self.x_y_lower_right, self.x_y_lower_left = (x_y_lower_right, x_y_lower_left)
@@ -168,6 +170,8 @@ class C1(Shape):
 
 
 class C2(Shape):
+    type="square"
+
     # coordinate == lower left corner
     def __init__(self, a, coord, color=""):
         self.x_y_upper_right, self.x_y_upper_left = ((coord[0]+a, coord[1]+a), (coord[0], coord[1]+a))
@@ -197,6 +201,8 @@ class C2(Shape):
 
 
 class C3(Shape):
+    type = "pentagon"
+
     def __init__(self, coord, radius, color=""):
         self.coords = coord
         self.radius = radius
@@ -216,7 +222,7 @@ class C3(Shape):
         return self.vertices
 
     def list_edges(self):
-        return [[self.vertices[0], self.vertices[1], [self.vertices[1], self.vertices[2]], [self.vertices[2], self.vertices[3]], [self.vertices[3], self.vertices[4]], [self.vertices[4], self.vertices[0]]]]
+        return [[self.vertices[0], self.vertices[1]], [self.vertices[1], self.vertices[2]], [self.vertices[2], self.vertices[3]], [self.vertices[3], self.vertices[4]], [self.vertices[4], self.vertices[0]]]
 
     def move(self, coord):
         self.coords = coord
@@ -265,13 +271,20 @@ if __name__ == '__main__':
     trapezoid2.move((4, 4))
     trapezoid2.fill("#ff5733")
     Shape.draw(shapes)
-    print(trapezoid2.list_points())
-    square1 = C2(2, (2, 1))
-    print(trapezoid1.square)
-    Shape.compare(trapezoid1, trapezoid2)
-    print(Shape.is_intersect(trapezoid1, trapezoid2))
-    print(Shape.is_intersect(trapezoid1, pentagon1))
-    print(Shape.is_include(trapezoid2, square1))
-
+    i=0
+    j=0
+    for shape_x in shapes:
+        i+=1
+        print(f"Shape №{i}, type: {shape_x.type}")
+        print(f"Square = {shape_x.square}")
+        print(f"Color = {shape_x.color}")
+        print(f"Perimeter = {shape_x.perimeter}")
+        for shape_y in shapes:
+            j+=1
+            if (shape_x!=shape_y):
+                Shape.compare(trapezoid1, trapezoid2)
+                print(f"Intersection between shape№{i} and shape№{j}: {Shape.is_intersect(shape_x, shape_y)}")
+                print(f"Shape№{i} includes shape№{j}: {Shape.is_include(shape_x, shape_y)}")
+        j=0
 
 
