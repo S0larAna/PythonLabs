@@ -1,8 +1,10 @@
 import math
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import PathPatch
 from matplotlib.path import Path
 
+matplotlib.use("TkAgg")
 
 def ray_casting(edges, point):
     xp, yp = point
@@ -189,10 +191,10 @@ class C3(Shape):
         self.coords = coord
         self.radius = radius
         vertices = []
-        angle_offset = math.radians(72)
+        angle_offset = 72
 
         for i in range(5):
-            angle = i * angle_offset
+            angle = math.radians((90 - angle_offset / 2 + i * angle_offset)+180)
             x = self.coords[0] + self.radius * math.cos(angle)
             y = self.coords[1] + self.radius * math.sin(angle)
             vertices.append((x, y))
@@ -231,7 +233,7 @@ if __name__ == '__main__':
     print(trapezoid1.square)
     Shape.compare(trapezoid1, trapezoid2)
     print(Shape.is_intersect(trapezoid1, trapezoid2))
-    print(Shape.is_intersect(trapezoid2, square1))
+    print(Shape.is_intersect(trapezoid1, pentagon1))
     print(Shape.is_include(trapezoid2, square1))
 
 
