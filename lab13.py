@@ -22,12 +22,13 @@ def ray_casting(edges, point):
 
 
 class Shape():
-    def __init__(self, coords):
+    def __init__(self, coords, color=""):
         self.coords = coords
         self.x_y_upper_right = (0, 0)
         self.x_y_lower_right = (0, 0)
         self.x_y_lower_left = (0, 0)
         self.x_y_upper_left = (0, 0)
+        self.color = color
 
     def get_x(self):
         points = self.list_points()
@@ -39,18 +40,28 @@ class Shape():
 
     @staticmethod
     def draw(list_of_figures):
+        codes = []
+        vertices = []
+        x = []
+        y = []
+        colors = []
+
         for figure in list_of_figures:
-            vertices = figure.list_points()
+            vertices += figure.list_points()
             vertices.append((0, 0))
-            codes = [Path.MOVETO] + [Path.LINETO]*(len(figure.list_points())-1) + [Path.CLOSEPOLY]
-            path = Path(vertices, codes)
-            pathpatch = PathPatch(path, facecolor='none', edgecolor='green')
-            fig, ax = plt.subplots()
-            ax.add_patch(pathpatch)
-            ax.autoscale_view()
-            xs = figure.get_x()
-            ys = figure.get_y()
-            ax.fill(xs, ys, "b")
+            codes += [Path.MOVETO] + [Path.LINETO]*(len(figure.list_points())-1) + [Path.CLOSEPOLY]
+            x.append(figure.get_x())
+            y.append(figure.get_y())
+            colors.append(figure.color)
+        path = Path(vertices, codes)
+        pathpatch = PathPatch(path, facecolor='none', edgecolor='green')
+        fig, ax = plt.subplots()
+        ax.add_patch(pathpatch)
+        ax.autoscale_view()
+        ax.add_patch(pathpatch)
+        ax.autoscale_view()
+        for i in range(len(x)):
+            ax.fill(x[i], y[i], colors[i])
         plt.show()
 
     def list_edges(self):
@@ -106,10 +117,11 @@ class Shape():
 
 # trapezoid
 class C1(Shape):
-    def __init__(self, x_y_upper_right, x_y_lower_right, x_y_lower_left, x_y_upper_left):
+    def __init__(self, x_y_upper_right, x_y_lower_right, x_y_lower_left, x_y_upper_left, color=""):
         self.x_y_upper_right, self.x_y_upper_left = (x_y_upper_right, x_y_upper_left)
         self.x_y_lower_right, self.x_y_lower_left = (x_y_lower_right, x_y_lower_left)
         self.coords = x_y_lower_left
+        self.color = color
 
     def move(self, coord):
         x_dif = coord[0] - self.coords[0]
@@ -153,7 +165,7 @@ class C1(Shape):
 
 class C2(Shape):
     # coordinate == lower left corner
-    def __init__(self, a, coord):
+    def __init__(self, a, coord, color=""):
         self.x_y_upper_right, self.x_y_upper_left = ((coord[0]+a, coord[1]+a), (coord[0], coord[1]+a))
         self.x_y_lower_right, self.x_y_lower_left = ((coord[0]+a, coord[1]), coord)
         self.coords = coord
@@ -161,6 +173,7 @@ class C2(Shape):
         self.base = a
         self.side_right = a
         self.side_left = a
+        self.color = color
 
     @property
     def square(self):
@@ -172,7 +185,7 @@ class C2(Shape):
 
 
 class C3(Shape):
-    def __init__(self, coord, radius):
+    def __init__(self, coord, radius, color=""):
         self.coords = coord
         self.radius = radius
         vertices = []
@@ -180,11 +193,12 @@ class C3(Shape):
 
         for i in range(5):
             angle = i * angle_offset
-            x = self.coord[0] + self.radius * math.cos(angle)
-            y = self.coord[1] + self.radius * math.sin(angle)
+            x = self.coords[0] + self.radius * math.cos(angle)
+            y = self.coords[1] + self.radius * math.sin(angle)
             vertices.append((x, y))
 
         self.vertices = vertices
+        self.color = color
 
     def list_points(self):
         return self.vertices
@@ -209,7 +223,9 @@ if __name__ == '__main__':
     trapezoid1 = C1((4, 4), (5, 1), (1, 1), (2, 4))
     trapezoid2 = C1((4, 4), (6, 1), (1, 1), (2, 4))
     trapezoid2.move((4, 4))
-    Shape.draw([trapezoid2])
+    pentagon1 = C3((1, 1,), 1, "#16a085")
+    trapezoid2.fill("#ff5733")
+    Shape.draw([trapezoid2, trapezoid1, pentagon1])
     print(trapezoid2.list_points())
     square1 = C2(2, (2, 1))
     print(trapezoid1.square)
