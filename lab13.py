@@ -22,6 +22,8 @@ def ray_casting(edges, point):
     else:
         return False
 
+matplotlib.use("TkAgg")
+
 
 class Shape():
     def __init__(self, coords, color=""):
@@ -177,6 +179,14 @@ class C2(Shape):
         self.side_left = a
         self.color = color
 
+    def move(self, coord):
+        x_dif = coord[0] - self.coords[0]
+        y_dif = coord[1] - self.coords[1]
+        self.x_y_lower_left = coord
+        self.x_y_lower_right = (self.x_y_lower_right[0]+x_dif, self.x_y_lower_right[1]+y_dif)
+        self.x_y_upper_right = (self.x_y_upper_right[0] + x_dif, self.x_y_upper_right[1] + y_dif)
+        self.x_y_upper_left = (self.x_y_upper_left[0] + x_dif, self.x_y_upper_left[1] + y_dif)
+
     @property
     def square(self):
         return self.base**2
@@ -207,6 +217,19 @@ class C3(Shape):
 
     def list_edges(self):
         return [[self.vertices[0], self.vertices[1], [self.vertices[1], self.vertices[2]], [self.vertices[2], self.vertices[3]], [self.vertices[3], self.vertices[4]], [self.vertices[4], self.vertices[0]]]]
+
+    def move(self, coord):
+        self.coords = coord
+        vertices = []
+        angle_offset = 72
+
+        for i in range(5):
+            angle = math.radians((90 - angle_offset / 2 + i * angle_offset) + 180)
+            x = self.coords[0] + self.radius * math.cos(angle)
+            y = self.coords[1] + self.radius * math.sin(angle)
+            vertices.append((x, y))
+
+        self.vertices = vertices
 
     @property
     def square(self):
